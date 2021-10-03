@@ -1,0 +1,49 @@
+package lp3a5.aula.pkg3;
+ 
+public class LP3A5Aula3 {
+	public volatile static int produtos = 0;
+	
+	public static void main(String[] args) {
+		Produtor p1 = new Produtor(1);
+		Consumidor c1 = new Consumidor(1);
+		p1.start();
+		c1.start();
+	}
+}
+
+class Produtor extends Thread {
+	int nProdutor = 0;
+	private static volatile Object lock = new Object();
+	Produtor(int num){
+		this.nProdutor = num;
+	}
+	public void run() {
+		for(int i = 0; i <= 20; i++) {
+			synchronized( lock ) 
+	 		{
+				if (LP3A5Aula3.produtos < 100)
+					LP3A5Aula3.produtos = LP3A5Aula3.produtos + 1;
+			}
+			System.out.println("Produtor " + nProdutor + ": " + LP3A5Aula3.produtos);
+		}
+	}
+}
+
+class Consumidor extends Thread {
+	int nConsumidor = 0;
+	private static volatile Object lock = new Object();
+	Consumidor(int num){
+		this.nConsumidor = num;
+	}
+	public void run() {
+		for(int i = 0; i <= 20; i++) {
+			synchronized( lock ) 
+			{	
+				if ( LP3A5Aula3.produtos > 1)
+					LP3A5Aula3.produtos = LP3A5Aula3.produtos - 1;
+			}
+			System.out.println("Consumidor " + nConsumidor + ": " + LP3A5Aula3.produtos);
+		}
+	}
+}
+
